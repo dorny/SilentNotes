@@ -94,6 +94,8 @@ body { background-color: transparent; }
         }
 
         $(function () {
+            makeSubmenus();
+
             quill = new Quill('#myeditor', {
                 formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote', 'link'],
                 modules: {
@@ -187,8 +189,13 @@ body { background-color: transparent; }
                 <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
                 <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                 <div class="dropdown-divider"></div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                <div class="dropdown-submenu dropleft">
+                    <button class="dropdown-item dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>@Model.Language["note_manual_sync"]</span></button>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                        <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                    </div>
+                </div>
             </div>
         </div>
         }

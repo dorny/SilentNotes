@@ -96,6 +96,9 @@ input[type="color"] { padding: 1px; }
 	height: 26px;
 	width: 26px;
 }
+.dropdown-submenu > [data-toggle] > span {
+	padding-left: 26px;
+}
 
 .wraplist {
 	display: block;

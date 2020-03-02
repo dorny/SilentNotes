@@ -49,8 +49,9 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code block";
             resources["note_quotation"] = "Quotation";
             resources["note_link"] = "Link";
-            resources["note_pull_from_server"] = "Manually download note";
-            resources["note_push_to_server"] = "Manually upload note";
+            resources["note_manual_sync"] = "Manual synchronization";
+            resources["note_pull_from_server"] = "Download note";
+            resources["note_push_to_server"] = "Upload note";
             resources["feedback_note_to_recycle"] = "The note has been moved to the recycle bin and can be restored from there.";
 
             resources["safe_new"] = "Create safe";
@@ -185,8 +186,9 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code Block";
             resources["note_quotation"] = "Zitat";
             resources["note_link"] = "Link";
-            resources["note_pull_from_server"] = "Notiz manuell herunterladen";
-            resources["note_push_to_server"] = "Notiz manuell hochladen";
+            resources["note_manual_sync"] = "Manuelle Synchronisation";
+            resources["note_pull_from_server"] = "Notiz herunterladen";
+            resources["note_push_to_server"] = "Notiz hochladen";
             resources["feedback_note_to_recycle"] = "Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.";
 
             resources["safe_new"] = "Tresor einrichten";
