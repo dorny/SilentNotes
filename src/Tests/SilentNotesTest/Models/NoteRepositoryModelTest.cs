@@ -76,6 +76,27 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(safe2Id, repository.Safes[0].Id);
         }
 
+        [Test]
+        public void RemoveUnusedTags_WorksCorrectly()
+        {
+            Guid tag1Id = new Guid("10000000000000000000000000000000");
+            Guid tag2Id = new Guid("20000000000000000000000000000000");
+
+            NoteRepositoryModel repository = new NoteRepositoryModel();
+            TagModel tag1 = new TagModel { Id = tag1Id };
+            TagModel tag2 = new TagModel { Id = tag2Id };
+            repository.Tags.AddRange(new[] { tag1, tag2 });
+            NoteModel note1 = new NoteModel();
+            note1.Tags.Add(tag2Id);
+            NoteModel note2 = new NoteModel();
+            note2.Tags.Add(tag2Id);
+            repository.Notes.AddRange(new[] { note1, note2 });
+
+            repository.RemoveUnusedTags();
+            Assert.AreEqual(1, repository.Tags.Count);
+            Assert.AreEqual(tag2Id, repository.Tags[0].Id);
+        }
+
         private static NoteRepositoryModel CreateNoteRepositoryModel()
         {
             NoteRepositoryModel model = new NoteRepositoryModel();

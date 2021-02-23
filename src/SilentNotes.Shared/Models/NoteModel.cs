@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using SilentNotes.Crypto;
 
@@ -18,6 +19,7 @@ namespace SilentNotes.Models
         public const string CryptorPackageName = "SilentNote";
         private Guid _id;
         private string _htmlContent;
+        private List<Guid> _tags;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteModel"/> class.
@@ -48,6 +50,9 @@ namespace SilentNotes.Models
             target.ModifiedAt = this.ModifiedAt;
             target.MaintainedAt = this.MaintainedAt;
             target.SafeId = this.SafeId;
+
+            target.Tags.Clear();
+            target.Tags.AddRange(this.Tags);
         }
 
         /// <summary>
@@ -76,6 +81,20 @@ namespace SilentNotes.Models
             get { return _htmlContent ?? (_htmlContent = string.Empty); }
             set { _htmlContent = value; }
         }
+
+        /// <summary>
+        /// Gets or sets a list of tag ids.
+        /// </summary>
+        [XmlArray("tags")]
+        [XmlArrayItem("tag")]
+        public List<Guid> Tags
+        {
+            get { return _tags ?? (_tags = new List<Guid>()); }
+            set { _tags = value; }
+        }
+
+        /// <summary>Gets a value indicating whether <see cref="Tags"/> should be serialized or omitted.
+        public bool TagsSpecified { get { return _tags != null && _tags.Count > 0; } }
 
         /// <summary>
         /// Gets or sets the background color of the note as hex string, e.g. #ff0000
@@ -116,7 +135,9 @@ namespace SilentNotes.Models
             get { return MaintainedAt.Value; }
             set { MaintainedAt = value; }
         }
-        public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } } // Serialize only when set
+
+        /// <summary>Gets a value indicating whether <see cref="MaintainedAtSerializeable"/> should be serialized or omitted.
+        public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } }
 
         /// <summary>
         /// Clears the <see cref="MaintainedAt"/> property if it is obsolete, because the object was
@@ -133,7 +154,9 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement(ElementName = "safe")]
         public Guid? SafeId { get; set; }
-        public bool SafeIdSpecified { get { return SafeId != null; } } // Serialize only when set
+
+        /// <summary>Gets a value indicating whether <see cref="SafeId"/> should be serialized or omitted.
+        public bool SafeIdSpecified { get { return SafeId != null; } }
 
         /// <summary>
         /// Sets the <see cref="ModifiedAt"/> property to the current UTC time.

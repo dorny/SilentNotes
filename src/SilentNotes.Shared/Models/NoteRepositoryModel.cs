@@ -18,11 +18,13 @@ namespace SilentNotes.Models
     public class NoteRepositoryModel
     {
         /// <summary>The highest revision of the repository which can be handled by this application.</summary>
+        // todo: increase revision
         public const int NewestSupportedRevision = 4;
         private Guid _id;
         private NoteListModel _notes;
         private List<Guid> _deletedNotes;
         private SafeListModel _safes;
+        private TagListModel _tags;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryModel"/> class.
@@ -98,6 +100,17 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
+        /// Gets or sets a list of tags which are used to order the notes.
+        /// </summary>
+        [XmlArray("tags")]
+        [XmlArrayItem("tag")]
+        public TagListModel Tags
+        {
+            get { return _tags ?? (_tags = new TagListModel()); }
+            set { _tags = value; }
+        }
+
+        /// <summary>
         /// Gets a fingerprint of the current repository, which can be used to determine, whether
         /// two repositories are different, or if a repository was modified in the meantime.
         /// Equal fingerprints mean unchanged repositories, different fingerprints indicate
@@ -131,6 +144,10 @@ namespace SilentNotes.Models
                     if (safe.MaintainedAt != null)
                         hashCode = (hashCode * 397) ^ safe.MaintainedAt.GetHashCode();
                 }
+                foreach (TagModel tag in Tags)
+                {
+                    hashCode = (hashCode * 397) ^ tag.ModifiedAt.GetHashCode();
+                }
                 return hashCode;
             }
         }
@@ -154,6 +171,26 @@ namespace SilentNotes.Models
         {
             List<Guid> usedSafeIds = Notes.Where(note => note.SafeId != null).Select(note => note.SafeId.Value).ToList();
             Safes.RemoveAll(safe => !usedSafeIds.Contains(safe.Id));
+        }
+
+        /// <summary>
+        /// Removes all tags, which are not used by any note anymore.
+        /// </summary>
+        public void RemoveUnusedTags()
+        {
+            HashSet<Guid> usedTagIds = new HashSet<Guid>();
+            foreach (NoteModel note in Notes)
+            {
+                if (note.TagsSpecified)
+                {
+                    foreach (Guid tagId in note.Tags)
+                    {
+                        if (!usedTagIds.Contains(tagId))
+                            usedTagIds.Add(tagId);
+                    }
+                }
+            }
+            Tags.RemoveAll(tag => !usedTagIds.Contains(tag.Id));
         }
     }
 }

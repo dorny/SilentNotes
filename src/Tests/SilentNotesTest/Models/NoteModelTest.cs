@@ -45,5 +45,25 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.MaintainedAt, note2.MaintainedAt);
             Assert.AreEqual(note1.SafeId, note2.SafeId);
         }
+
+        [Test]
+        public void Clone_CopiesTags()
+        {
+            NoteModel note1 = new NoteModel();
+            NoteModel note2 = note1.Clone();
+
+            Assert.IsFalse(note2.TagsSpecified);
+
+            Guid id1 = Guid.NewGuid();
+            Guid id2 = Guid.NewGuid();
+            note1.Tags.Add(id1);
+            note1.Tags.Add(id2);
+            note2 = note1.Clone();
+
+            Assert.IsTrue(note2.TagsSpecified);
+            Assert.AreEqual(2, note2.Tags.Count);
+            Assert.AreEqual(id1, note2.Tags[0]);
+            Assert.AreEqual(id2, note2.Tags[1]);
+        }
     }
 }
